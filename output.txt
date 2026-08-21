@@ -1,0 +1,162 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.2, pluggy-1.6.0 -- /home/wys/projects/assignment1-basics/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /home/wys/projects/assignment1-basics
+configfile: pyproject.toml
+plugins: timeout-2.4.0, jaxtyping-0.3.9
+collecting ... collected 3 items
+
+tests/test_train_bpe.py::test_train_bpe_speed FAILED
+tests/test_train_bpe.py::test_train_bpe [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'e', b'n'), (b'o', b'u'), (b'i', b't'), (b'e', b's'), (b' o', b'f'), (b'e', b'd'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'a', b'l'), (b' ', b'm'), (b' a', b'nd'), (b' ', b'd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b'a', b's'), (b'o', b't'), (b' ', b'e'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'e', b'l'), (b'u', b't'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'c', b'e'), (b'l', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'er'), (b'v', b'e'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'n', b't'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' s', b'h'), (b' ', b'C'), (b' c', b'om'), (b't', b'h'), (b' ', b'@'), (b' w', b'h'), (b' a', b're'), (b' @', b'-'), (b' @-', b'@'), (b'er', b's'), (b' w', b'ith'), (b'i', b'd'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b'al', b'l'), (b' a', b's'), (b'an', b'd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b'is', b't'), (b'qu', b'ot'), (b'm', b'ent'), (b' ', b'M'), (b' o', b'r'), (b's', b's'), (b' ', b'G'), (b't', b'er'), (b' f', b'r'), (b' s', b't'), (b'f', b'or'), (b' th', b'is'), (b' c', b'on'), (b'il', b'l'), (b'l', b'd'), (b' ', b'2'), (b' ', b';'), (b'a', b've'), (b' ', b'L'), (b'a', b'in'), (b'l', b'y'), (b'ar', b't'), (b' d', b'e'), (b' fr', b'om'), (b'ap', b'os'), (b' a', b'n'), (b'i', b've'), (b'a', b'g'), (b's', b'e'), (b' ', b'('), (b'u', b'l'), (b'0', b'0'), (b' ', b'E'), (b'e', b'm'), (b' n', b'ot'), (b'er', b'e'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b' c', b'an'), (b' b', b'y'), (b' ', b'D'), (b' n', b'e'), (b'b', b'le'), (b' ', b'v'), (b' al', b'l'), (b'ig', b'h'), (b'ic', b'h'), (b' h', b'e'), (b' ', b'r'), (b' u', b'p'), (b' ', b'W'), (b' the', b'y'), (b' ', b'B'), (b'r', b'i'), (b'e', b'ct'), (b' wh', b'ich'), (b'es', b't'), (b' y', b'e'), (b'u', b'n'), (b' ', b'O'), (b' w', b'or'), (b' ', b'F'), (b' ', b'H'), (b' h', b'ave'), (b'o', b'c'), (b'e', b'e'), (b' sh', b'all'), (b' c', b'h'), (b'it', b'y'), (b' s', b'p'), (b'th', b'e'), (b'at', b'e'), (b' s', b'u'), (b' com', b'p'), (b' w', b'ill'), (b'an', b't'), (b' &', b'#'), (b'a', b'k'), (b're', b'ss'), (b' ', b'k'), (b'or', b't'), (b'.', b'.'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b'2', b'4'), (b' ', b'T'), (b'ou', b'ld'), (b'as', b't'), (b'es', b's'), (b'm', b'er'), (b' t', b'r'), (b'u', b'st'), (b'ou', b't'), (b' u', b'nt'), (b'c', b'om'), (b'igh', b't'), (b' w', b'e'), (b'n', b'g'), (b'f', b't'), (b' unt', b'o'), (b'ion', b's'), (b' pr', b'o'), (b'os', b't'), (b'l', b'o'), (b'i', b'z'), (b'1', b'24'), (b'u', b'm'), (b'is', b'h'), (b' a', b'c'), (b'ing', b's'), (b'ate', b'd'), (b'th', b'is'), (b' m', b'an'), (b'l', b'u'), (b' m', b'y'), (b' a', b't'), (b'an', b's'), (b'ag', b'e'), (b'r', b'ou'), (b' wor', b'k'), (b'in', b'd'), (b'p', b'p'), (b' s', b'it'), (b'i', b'es'), (b'for', b'e'), (b'p', b'en'), (b'as', b'e'), (b' 2', b'00'), (b'P', b'ress'), (b'ar', b'e')] [(b' ', b't'), (b' ', b'a'), (b'h', b'e'), (b'i', b'n'), (b' t', b'he'), (b'r', b'e'), (b' ', b'o'), (b' ', b','), (b'e', b'r'), (b' ', b's'), (b'a', b't'), (b' ', b'.'), (b'n', b'd'), (b'i', b's'), (b'o', b'r'), (b' ', b'w'), (b' ', b'c'), (b'o', b'n'), (b' ', b'b'), (b' ', b'f'), (b'o', b'u'), (b'i', b't'), (b'e', b'n'), (b'e', b's'), (b' o', b'f'), (b' ', b'p'), (b'in', b'g'), (b' ', b'in'), (b'e', b'd'), (b'a', b'l'), (b' ', b'm'), (b' a', b'nd'), (b' ', b'd'), (b'a', b'n'), (b'a', b'r'), (b' t', b'o'), (b'o', b'm'), (b' t', b'h'), (b'i', b'c'), (b'i', b'on'), (b' ', b'h'), (b' ', b'l'), (b' ', b'y'), (b' ', b'e'), (b'a', b's'), (b'o', b't'), (b'i', b'l'), (b' ', b'n'), (b' ', b'u'), (b'en', b't'), (b' b', b'e'), (b' ', b'&'), (b' ', b'is'), (b' y', b'ou'), (b'o', b's'), (b' ', b're'), (b'e', b't'), (b' f', b'or'), (b'u', b't'), (b'e', b'l'), (b' ', b'g'), (b'a', b'y'), (b's', b't'), (b'o', b'w'), (b'l', b'e'), (b'c', b'e'), (b'a', b'd'), (b' o', b'n'), (b' ', b'I'), (b'v', b'er'), (b'v', b'e'), (b' ', b'A'), (b'u', b'r'), (b'o', b'l'), (b'c', b't'), (b'q', b'u'), (b' th', b'at'), (b'i', b'm'), (b'al', b'l'), (b'a', b'm'), (b'i', b'g'), (b'c', b'h'), (b'at', b'ion'), (b' ', b'P'), (b'it', b'h'), (b'i', b'r'), (b' ', b'S'), (b' ', b'it'), (b' p', b'r'), (b'a', b'p'), (b' s', b'h'), (b' ', b'C'), (b't', b'h'), (b' c', b'om'), (b' ', b'@'), (b' w', b'h'), (b'-', b'@'), (b' a', b're'), (b' @', b'-@'), (b'n', b't'), (b'i', b'd'), (b' w', b'ith'), (b' a', b'l'), (b'o', b'p'), (b' u', b's'), (b'er', b's'), (b' a', b's'), (b't', b'he'), (b'a', b'nd'), (b'i', b'f'), (b'or', b'd'), (b'o', b'd'), (b' ', b'he'), (b'is', b't'), (b'qu', b'ot'), (b'm', b'ent'), (b' ', b'M'), (b' o', b'r'), (b'o', b're'), (b' ', b'G'), (b' f', b'r'), (b'il', b'l'), (b're', b's'), (b' s', b't'), (b'es', b's'), (b'l', b'd'), (b' th', b'is'), (b' ', b'2'), (b'ar', b't'), (b' ', b';'), (b' ', b'L'), (b'l', b'y'), (b'a', b'in'), (b'u', b'l'), (b' d', b'e'), (b' c', b'on'), (b'es', b't'), (b's', b'e'), (b'ap', b'os'), (b'a', b'g'), (b' fr', b'om'), (b' a', b'n'), (b' w', b'e'), (b' ', b'('), (b'0', b'0'), (b't', b'er'), (b' ', b'E'), (b'e', b'm'), (b'a', b've'), (b' n', b'ot'), (b' ', b')'), (b' ', b'1'), (b' you', b'r'), (b'o', b'c'), (b' c', b'an'), (b' b', b'y'), (b' ', b'D'), (b' n', b'e'), (b' ', b'v'), (b'ig', b'h'), (b'ic', b'h'), (b' al', b'l'), (b'r', b'i'), (b' u', b'p'), (b' ', b'r'), (b' ', b'W'), (b'b', b'le'), (b' the', b'y'), (b' ', b'B'), (b'u', b'n'), (b' y', b'e'), (b' wh', b'ich'), (b' ', b'O'), (b'k', b'e'), (b' w', b'or'), (b' s', b'u'), (b' ', b'F'), (b' ', b'H'), (b' h', b'ave'), (b'at', b'e'), (b' sh', b'all'), (b' c', b'h'), (b'e', b'ct'), (b'it', b'y'), (b' s', b'p'), (b'res', b's'), (b'igh', b't'), (b' w', b'ill'), (b' com', b'p'), (b'or', b't'), (b'an', b't'), (b' &', b'#'), (b'i', b've'), (b'a', b're'), (b'.', b'.'), (b' e', b'x'), (b' A', b'nd'), (b' .', b'..'), (b'as', b't'), (b'2', b'4'), (b' ', b'T'), (b'ou', b'ld'), (b'v', b'en'), (b' t', b'r'), (b'u', b'st'), (b'u', b'm'), (b'ou', b't'), (b'c', b'om'), (b' u', b'nt'), (b' s', b'e'), (b'f', b't'), (b're', b'e'), (b'os', b't'), (b'o', b'g'), (b'is', b'h'), (b'ion', b's'), (b'i', b'z'), (b'1', b'24'), (b' unt', b'o'), (b'm', b'er'), (b'ing', b's'), (b' a', b'c'), (b'th', b'is'), (b'at', b'ed'), (b'a', b'c'), (b'l', b'u'), (b'e', b're'), (b' m', b'an'), (b'f', b'or'), (b' m', b'y'), (b' a', b't'), (b'i', b'es'), (b'ag', b'e'), (b'r', b'ou'), (b'l', b'o'), (b'an', b's'), (b'p', b'p'), (b'in', b'd'), (b' wor', b'k'), (b'he', b're'), (b'f', b'ore'), (b' s', b'it'), (b' ', b'ver')]
+FAILED
+tests/test_train_bpe.py::test_train_bpe_special_tokens FAILED
+
+=================================== FAILURES ===================================
+_____________________________ test_train_bpe_speed _____________________________
+
+    def test_train_bpe_speed():
+        """
+        Ensure that BPE training is relatively efficient by measuring training
+        time on this small dataset and throwing an error if it takes more than 1.5 seconds.
+        This is a pretty generous upper-bound, it takes 0.38 seconds with the
+        reference implementation on my laptop. In contrast, the toy implementation
+        takes around 3 seconds.
+        """
+        input_path = FIXTURES_PATH / "corpus.en"
+        start_time = time.time()
+        _, _ = run_train_bpe(
+            input_path=input_path,
+            vocab_size=500,
+            special_tokens=["<|endoftext|>"],
+        )
+        end_time = time.time()
+>       assert end_time - start_time < 1.5
+E       assert (1787109940.8836746 - 1787109934.495158) < 1.5
+
+tests/test_train_bpe.py:24: AssertionError
+________________________________ test_train_bpe ________________________________
+
+    def test_train_bpe():
+        input_path = FIXTURES_PATH / "corpus.en"
+        vocab, merges = run_train_bpe(
+            input_path=input_path,
+            vocab_size=500,
+            special_tokens=["<|endoftext|>"],
+        )
+    
+        # Path to the reference tokenizer vocab and merges
+        reference_vocab_path = FIXTURES_PATH / "train-bpe-reference-vocab.json"
+        reference_merges_path = FIXTURES_PATH / "train-bpe-reference-merges.txt"
+    
+        # Compare the learned merges to the expected output merges
+        gpt2_byte_decoder = {v: k for k, v in gpt2_bytes_to_unicode().items()}
+        with open(reference_merges_path, encoding="utf-8") as f:
+            gpt2_reference_merges = [tuple(line.rstrip().split(" ")) for line in f]
+            reference_merges = [
+                (
+                    bytes([gpt2_byte_decoder[token] for token in merge_token_1]),
+                    bytes([gpt2_byte_decoder[token] for token in merge_token_2]),
+                )
+                for merge_token_1, merge_token_2 in gpt2_reference_merges
+            ]
+        print(merges,reference_merges)
+>       assert merges == reference_merges
+E       AssertionError: assert [(b' ', b't')...', b'e'), ...] == [(b' ', b't')...', b'e'), ...]
+E         
+E         At index 20 diff: (b'e', b'n') != (b'o', b'u')
+E         
+E         Full diff:
+E           [
+E               (
+E                   b' ',...
+E         
+E         ...Full output truncated (1338 lines hidden), use '-vv' to show
+
+tests/test_train_bpe.py:51: AssertionError
+________________________ test_train_bpe_special_tokens _________________________
+
+snapshot = <tests.conftest.Snapshot object at 0x7f68e3c10530>
+
+    def test_train_bpe_special_tokens(snapshot):
+        """
+        Ensure that the special tokens are added to the vocabulary and not
+        merged with other tokens.
+        """
+        input_path = FIXTURES_PATH / "tinystories_sample_5M.txt"
+        vocab, merges = run_train_bpe(
+            input_path=input_path,
+            vocab_size=1000,
+            special_tokens=["<|endoftext|>"],
+        )
+    
+        # Check that the special token is not in the vocab
+        vocabs_without_specials = [word for word in vocab.values() if word != b"<|endoftext|>"]
+        for word_bytes in vocabs_without_specials:
+            assert b"<|" not in word_bytes
+    
+>       snapshot.assert_match(
+            {
+                "vocab_keys": set(vocab.keys()),
+                "vocab_values": set(vocab.values()),
+                "merges": merges,
+            },
+        )
+
+tests/test_train_bpe.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <tests.conftest.Snapshot object at 0x7f68e3c10530>
+actual = {'merges': [(b'h', b'e'), (b' ', b't'), (b' ', b'a'), (b' ', b's'), (b' ', b'w'), (b'n', b'd'), ...], 'vocab_keys': {0, 1, 2, 3, 4, 5, ...}, 'vocab_values': {b'\x00', b'\x01', b'\x02', b'\x03', b'\x04', b'\x05', ...}}
+test_name = 'test_train_bpe_special_tokens', force_update = False
+
+    def assert_match(
+        self,
+        actual: A | dict[str, A],
+        test_name: str | type[DEFAULT] = DEFAULT,
+        force_update: bool | type[DEFAULT] = DEFAULT,
+    ):
+        """
+        Assert that the actual data matches the snapshot.
+        Args:
+            actual: Single object or dictionary of named objects
+            test_name: The name of the test (used for the snapshot file)
+            force_update: If True, update the snapshot instead of comparing
+        """
+    
+        if force_update is DEFAULT:
+            force_update = self.default_force_update
+        if test_name is DEFAULT:
+            assert self.default_test_name is not None, "Test name must be provided or set as default"
+            test_name = self.default_test_name
+    
+        snapshot_path = self._get_snapshot_path(test_name)
+    
+        # Load the snapshot
+        with open(snapshot_path, "rb") as f:
+            expected_data = pickle.load(f)
+    
+        if isinstance(actual, dict):
+            for key in actual:
+                if key not in expected_data:
+                    raise AssertionError(f"Key '{key}' not found in snapshot for {test_name}")
+>               assert actual[key] == expected_data[key], (
+                    f"Data for key '{key}' does not match snapshot for {test_name}"
+                )
+E               AssertionError: Data for key 'vocab_values' does not match snapshot for test_train_bpe_special_tokens
+E               assert {b'\x00', b'\... b'\x05', ...} == {b'\x00', b'\... b'\x05', ...}
+E                 
+E                 Extra items in the left set:
+E                 b'row'
+E                 b' som'
+E                 b' watch'
+E                 b'tch'
+E                 b' jum'...
+E                 
+E                 ...Full output truncated (1259 lines hidden), use '-vv' to show
+
+tests/conftest.py:143: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_train_bpe.py::test_train_bpe_speed - assert (1787109940.883...
+FAILED tests/test_train_bpe.py::test_train_bpe - AssertionError: assert [(b' ...
+FAILED tests/test_train_bpe.py::test_train_bpe_special_tokens - AssertionErro...
+============================== 3 failed in 37.11s ==============================
