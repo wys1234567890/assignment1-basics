@@ -161,3 +161,9 @@ cython_debug/
 
 .ruff_cache/
 *.zip
+
+# Training data (too large for GitHub's 100MB limit)
+data/owt_train.txt
+data/owt_valid.txt
+data/TinyStoriesV2-GPT4-train.txt
+data/TinyStoriesV2-GPT4-valid.txt
