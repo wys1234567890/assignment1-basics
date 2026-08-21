@@ -10,6 +10,7 @@ import torch
 from jaxtyping import Bool, Float, Int
 from torch import Tensor
 from cs336_basics.bpe_trainer import train_bpe_tokenizer
+from cs336_basics.linear import Linear
 
 
 def run_linear(
@@ -26,13 +27,14 @@ def run_linear(
         out_dim (int): The size of the output dimension
         weights (Float[Tensor, "d_out d_in"]): The linear weights to use
         in_features (Float[Tensor, "... d_in"]): The output tensor to apply the function to
-
+    
     Returns:
         Float[Tensor, "... d_out"]: The transformed output of your linear module.
     """
 
-    raise NotImplementedError
-
+    linear_layer = Linear(d_in, d_out, dtype=in_features.dtype, device=in_features.device)
+    linear_layer.load_state_dict({"weight": weights})
+    return linear_layer(in_features)
 
 def run_embedding(
     vocab_size: int,
