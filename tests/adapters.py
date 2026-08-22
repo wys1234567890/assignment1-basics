@@ -13,6 +13,7 @@ from cs336_basics.bpe_trainer import train_bpe_tokenizer
 from cs336_basics.linear import Linear
 from cs336_basics.embedding import Embedding
 from cs336_basics.rms_norm import RMSNorm
+from cs336_basics.positionwise_feed_forward import PositionwiseFeedForward
 
 
 def run_linear(
@@ -91,7 +92,11 @@ def run_swiglu(
     # swiglu.w1.weight.data = w1_weight
     # swiglu.w2.weight.data = w2_weight
     # swiglu.w3.weight.data = w3_weight
-    raise NotImplementedError
+    swiglu_layer = PositionwiseFeedForward(d_model, d_ff, dtype=in_features.dtype, device=in_features.device)
+    swiglu_layer.linear1.weight.data = w1_weight
+    swiglu_layer.linear2.weight.data = w2_weight
+    swiglu_layer.gate.weight.data = w3_weight
+    return swiglu_layer(in_features)
 
 
 def run_scaled_dot_product_attention(
