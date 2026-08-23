@@ -17,7 +17,13 @@ class PositionwiseFeedForward(nn.Module):
             self.d_hidden = round(d_hidden / 64) * 64  # 将隐藏层维度调整为64的倍数
         else:
             self.d_hidden = d_ff
-        self.device = torch.device(device) if device is not None else torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        if device is not None:
+            try:
+                self.device = torch.device(device)
+            except Exception as e:
+                raise ValueError(f"无效的设备格式: '{device}'。请使用 'cpu', 'cuda', 'cuda:0' 等格式。") from e
+        else:
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "xpu" if torch.xpu.is_available() else "cpu")
         self.dtype = dtype if dtype is not None else torch.bfloat16
         self.linear1 = Linear(d_in, self.d_hidden, device=self.device, dtype=self.dtype)
         self.linear2 = Linear(self.d_hidden, d_in, device=self.device, dtype=self.dtype)
