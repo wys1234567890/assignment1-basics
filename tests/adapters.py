@@ -15,6 +15,7 @@ from cs336_basics.embedding import Embedding
 from cs336_basics.rms_norm import RMSNorm
 from cs336_basics.positionwise_feed_forward import PositionwiseFeedForward
 from cs336_basics.rotary_positional_embedding import RotaryPositionalEmbedding
+from cs336_basics.softmax import softmax
 
 
 def run_linear(
@@ -448,7 +449,9 @@ def run_softmax(in_features: Float[Tensor, " ..."], dim: int) -> Float[Tensor, "
         Float[Tensor, "..."]: Tensor of with the same shape as `in_features` with the output of
         softmax normalizing the specified `dim`.
     """
-    raise NotImplementedError
+    # Subtract the max along `dim` (keepdim=True so shapes broadcast) to keep
+    # exp() numerically stable: after the shift all values are <= 0, so no overflow.
+    return softmax(in_features, dim=dim)
 
 
 def run_cross_entropy(
