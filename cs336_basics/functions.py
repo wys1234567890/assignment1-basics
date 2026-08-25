@@ -1,5 +1,4 @@
 import math
-
 import torch
 import einops
 
@@ -47,3 +46,28 @@ def scaled_dot_product_attention(q: torch.Tensor, k: torch.Tensor, v: torch.Tens
     softmax_qk = softmax(qk, dim=-1)
     output = einops.einsum(softmax_qk, v, "... seq_len_q seq_len_k, ... seq_len_k d_v -> ... seq_len_q d_v")
     return output
+
+def cross_entropy_loss(logits: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
+    """
+    计算交叉熵损失。
+    参数：
+        logits: 形状为 (batch_size, ..., num_classes) 的未归一化预测值。
+        targets: 形状为 (batch_size, ...) 的整数标签，取值范围为 [0, num_classes-1]。
+    返回：
+        标量张量，表示平均交叉熵损失。
+    """
+    assert logits.device == targets.device, f"logits 和 targets 必须在同一 device，实际为 logits={logits.device}, targets={targets.device}"
+    assert logits.shape[:-1] == targets.shape, f"logits 的前 n-1 维必须与 targets 形状匹配，实际为 logits={logits.shape}, targets={targets.shape}"
+    assert targets.dtype in (torch.int32, torch.int64), f"targets 必须是整数类型，实际 dtype 为 {targets.dtype}"
+    orig_dtype = logits.dtype
+    logits = logits.to(torch.float32)  # 为了数值稳定性，先转为 float32
+
+    logits_subtract = logits - logits.max(dim=-1, keepdim=True).values  # 减去最大值，避免 exp 溢出
+    log_sum = torch.log(torch.sum(torch.exp(logits_subtract), dim=-1, keepdim=True))
+    negative_log_loss = -logits_subtract + log_sum
+    all_loss =  torch.gather(negative_log_loss, dim=-1, index=targets.unsqueeze(-1)).squeeze(-1)  # 选择正确类别的损失
+    loss = torch.mean(all_loss)
+    return loss.to(orig_dtype)
+
+
+
