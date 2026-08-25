@@ -25,9 +25,9 @@ class PositionwiseFeedForward(nn.Module):
         else:
             self.device = torch.device("cuda" if torch.cuda.is_available() else "xpu" if torch.xpu.is_available() else "cpu")
         self.dtype = dtype if dtype is not None else torch.bfloat16
-        self.linear1 = Linear(d_in, self.d_hidden, device=self.device, dtype=self.dtype)
-        self.linear2 = Linear(self.d_hidden, d_in, device=self.device, dtype=self.dtype)
-        self.gate = Linear(d_in, self.d_hidden, device=self.device, dtype=self.dtype)  # 用于SwiGLU激活的线性层
+        self.w1 = Linear(d_in, self.d_hidden, device=self.device, dtype=self.dtype)
+        self.w2 = Linear(self.d_hidden, d_in, device=self.device, dtype=self.dtype)
+        self.w3 = Linear(d_in, self.d_hidden, device=self.device, dtype=self.dtype)  # 用于SwiGLU激活的线性层
 
     def silu(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -43,9 +43,9 @@ class PositionwiseFeedForward(nn.Module):
         if x.device != self.device or x.dtype != self.dtype:
             x = x.to(self.device, dtype=self.dtype)
 
-        out = self.linear1(x)
-        out = self.silu(out) * self.gate(x)
-        out = self.linear2(out)
+        out = self.w1(x)
+        out = self.silu(out) * self.w3(x)
+        out = self.w2(out)
         return out.to(device=orig_device, dtype=orig_dtype)
         
 
