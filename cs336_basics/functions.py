@@ -1,6 +1,7 @@
 import math
 import torch
 import einops
+import numpy
 
 def softmax(x: torch.Tensor, dim: int) -> torch.Tensor:
     """
@@ -68,5 +69,91 @@ def cross_entropy_loss(logits: torch.Tensor, targets: torch.Tensor) -> torch.Ten
     loss = torch.mean(all_loss)
     return loss #返回float32 高精度
 
+def cosine_schedule_with_warmup(t: int, warmup_steps: int, total_steps: int, min_lr: float, max_lr: float) -> float:
+    """
+    创建一个学习率调度器，先进行 warmup，然后按余弦衰减,最后维持在最小学习率
+    """
+    if t < warmup_steps:
+        return max_lr * t / warmup_steps
+    if t >= total_steps:
+        return min_lr
+    progress = (t - warmup_steps) / (total_steps - warmup_steps)
+    cosine_decay = 0.5 * (1 + math.cos(math.pi * progress))
+    lr = min_lr + (max_lr - min_lr) * cosine_decay
+    return lr
 
+def gradient_clipping(parameters, max_norm):
+    """
+    对模型参数的梯度进行裁剪，防止梯度爆炸。
+    参数：
+        parameters: 可迭代的模型参数。
+        max_norm: 最大范数阈值。
+    """
+    total_norm = 0.0
+    for p in parameters:
+        if p.grad is not None:
+            param_norm = p.grad.data.norm(2)
+            total_norm += param_norm.item() ** 2
+    total_norm = total_norm ** 0.5
+    if total_norm <= max_norm:
+        return  # 不需要裁剪
+    clip_coef = max_norm / (total_norm + 1e-6)
+    for p in parameters:
+        if p.grad is not None:
+            p.grad.data.mul_(clip_coef)
 
+def data_loader(dataset: numpy.ndarray, batch_size: int, context_length: int, device=None):
+    """
+    将输入数据 dataset 按照指定的 batch_size 分批加载，并可选择将数据移动到指定设备。
+    参数：
+        dataset: 输入数据，形状为 (seq_length) 的 numpy 数组。
+        batch_size: 每个批次的样本数量。
+        context_length: 上下文长度，用于确定每个样本的有效长度。
+        device: 可选，指定将数据移动到的设备（如 'cpu' 或 'cuda'）。
+    返回：
+        一个生成器，每次迭代返回一个批次的数据，形状为 (batch_size, ...) 的 torch.Tensor。
+    """
+    if device is not None:
+        try:
+            device = torch.device(device)
+        except Exception as e:
+            raise ValueError(f"无效的设备格式: '{device}'。请使用 'cpu', 'cuda', 'cuda:0' 等格式。") from e
+    else:
+        device = torch.device("cuda" if torch.cuda.is_available() else "xpu" if torch.xpu.is_available() else "cpu")
+    
+    data = torch.from_numpy(dataset)
+    num_possible_starting_indices = len(dataset) - context_length
+    starting_indices = torch.randint(
+        low=0, high=num_possible_starting_indices, size=(batch_size,)
+    ).tolist()
+
+    x = torch.stack([data[i : i + context_length] for i in starting_indices])
+    y = torch.stack([data[i + 1 : i + context_length + 1] for i in starting_indices])
+    # 统一为 int64：token 索引与交叉熵 targets 都需要整数。若 dataset 是 uint16 的 memmap，
+    # torch.from_numpy 会得到 int16，而 cross_entropy_loss 要求 targets 为 int32/int64。
+    return x.long().to(device), y.long().to(device)
+
+def save_checkpoint(model: torch.nn.Module, optimizer: torch.optim.Optimizer, iteration: int, path: str):
+    """
+    保存模型和优化器的检查点。
+    参数：
+        model: 要保存的模型。
+        optimizer: 要保存的优化器。
+        iteration: 当前迭代次数。
+        path: 保存检查点的文件路径。
+    """
+    torch.save({
+        'iteration': iteration,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        }, path)
+
+def load_checkpoint(src: str, model: torch.nn.Module, optimizer: torch.optim.Optimizer):
+    """
+    从检查点加载模型和优化器的状态。
+    """
+    checkpoint = torch.load(src, map_location='cuda:0' if torch.cuda.is_available() else 'cpu')
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    iteration = checkpoint['iteration']
+    return iteration
