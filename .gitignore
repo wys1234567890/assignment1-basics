@@ -169,3 +169,4 @@ data/TinyStoriesV2-GPT4-train.txt
 data/TinyStoriesV2-GPT4-valid.txt
 # Git Credential Manager wrapper (local helper)
 gcm-wrapper.sh
+models/

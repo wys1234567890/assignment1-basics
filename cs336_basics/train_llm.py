@@ -1,5 +1,4 @@
 import os
-
 import argparse
 
 import numpy as np
@@ -27,7 +26,7 @@ def parse_args():
     p = argparse.ArgumentParser(description="Train an LLM on TinyStories")
 
     # data paths
-    p.add_argument("--train_name", type=str, default="train_4080", help="Name of this run (used as save dir)")
+    p.add_argument("--train_name", type=str, default="train_4080_1", help="Name of this run (used as save dir)")
     p.add_argument("--save_path", type=str, default="../models", help="Root dir to save the run under")
     p.add_argument(
         "--vocab_path", type=str, default="../data/TinyStoriesV2-GPT4-train_vocab.json", help="Path to vocab json"
@@ -45,22 +44,22 @@ def parse_args():
 
     # model
     p.add_argument("--vocab_size", type=int, default=None, help="If None, use len(tokenizer.vocab)")
-    p.add_argument("--context_size", type=int, default=512, help="Context window length (max sequence length)")
+    p.add_argument("--context_size", type=int, default=256, help="Context window length (max sequence length)")
     p.add_argument("--d_model", type=int, default=512, help="Hidden dimension")
-    p.add_argument("--num_layers", type=int, default=8, help="Number of transformer layers")
-    p.add_argument("--num_heads", type=int, default=8, help="Number of attention heads")
-    p.add_argument("--d_ff", type=int, default=2048, help="Feed-forward hidden dimension")
-    p.add_argument("--rope_theta", type=float, default=None, help="RoPE theta (optional)")
+    p.add_argument("--num_layers", type=int, default=4, help="Number of transformer layers")
+    p.add_argument("--num_heads", type=int, default=16, help="Number of attention heads")
+    p.add_argument("--d_ff", type=int, default=1344, help="Feed-forward hidden dimension")
+    p.add_argument("--rope_theta", type=float, default=10000, help="RoPE theta (optional)")
     p.add_argument("--dtype", type=str, default="bfloat16", choices=["bfloat16", "float32"], help="Parameter dtype")
     p.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu", help="Device")
 
     # training
-    p.add_argument("--batch_size", type=int, default=32, help="Micro-batch size per optimizer step")
-    p.add_argument("--num_steps", type=int, default=2000, help="Total number of optimizer steps")
+    p.add_argument("--batch_size", type=int, default=128, help="Micro-batch size per optimizer step")
+    p.add_argument("--num_steps", type=int, default=8000, help="Total number of optimizer steps")
     p.add_argument("--grad_accum", type=int, default=1, help="Gradient accumulation steps (effective batch = batch*grad_accum)")
     p.add_argument("--learning_rate", type=float, default=6e-4, help="Peak learning rate")
     p.add_argument("--min_lr", type=float, default=6e-5, help="Floor of the cosine schedule")
-    p.add_argument("--warmup_steps", type=int, default=300, help="Linear warmup steps")
+    p.add_argument("--warmup_steps", type=int, default=1000, help="Linear warmup steps")
     p.add_argument("--grad_clip", type=float, default=1.0, help="Global gradient-norm clip value")
     p.add_argument("--weight_decay", type=float, default=0.1, help="AdamW weight decay")
     p.add_argument("--betas", type=betas_type, default=(0.9, 0.95), help="AdamW betas, e.g. '0.9,0.95'")
@@ -187,7 +186,9 @@ def main():
     os.makedirs(save_dir, exist_ok=True)
 
     # --- tokenizer + vocab size ---
-    tokenizer = Tokenizer.from_files(args.vocab_path, args.merges_path)
+    # 必须把 '<|endoftext|>' 声明为特殊 token：否则 encode() 会把它拆成 8 个 token，
+    # 模型就学不到「单个 256 = 结束」。声明后 encode('<|endoftext|>') 会得到 [256]。
+    tokenizer = Tokenizer.from_files(args.vocab_path, args.merges_path, special_tokens=["<|endoftext|>"])
     if args.vocab_size is None:
         args.vocab_size = len(tokenizer.vocab)
     print(f"[data] vocab_size = {args.vocab_size}", flush=True)
@@ -211,6 +212,19 @@ def main():
         device=args.device,
         dtype=dtype,
     ).to(args.device)
+
+    # 把模型结构配置一并存进 checkpoint，推理时（llm_inference）可据此自动重建模型。
+    model_config = dict(
+        vocab_size=args.vocab_size,
+        context_size=args.context_size,
+        d_model=args.d_model,
+        num_layers=args.num_layers,
+        num_heads=args.num_heads,
+        d_ff=args.d_ff,
+        rope_theta=args.rope_theta,
+        dtype=args.dtype,
+    )
+
     optimizer = AdamW(
         model.parameters(),
         lr=args.learning_rate,
@@ -279,10 +293,10 @@ def main():
 
         # 4) periodic checkpoint
         if (step + 1) % args.save_interval == 0:
-            save_checkpoint(model, optimizer, step + 1, os.path.join(save_dir, f"checkpoint_step_{step + 1}.pt"))
+            save_checkpoint(model, optimizer, step + 1, os.path.join(save_dir, f"checkpoint_step_{step + 1}.pt"), config=model_config)
 
     # --- final save + plot ---
-    save_checkpoint(model, optimizer, args.num_steps, os.path.join(save_dir, "checkpoint_final.pt"))
+    save_checkpoint(model, optimizer, args.num_steps, os.path.join(save_dir, "checkpoint_final.pt"), config=model_config)
     plot_losses(save_dir, train_records, val_records)
     print(f"[done] 训练完成。checkpoint 与损失图保存在 {save_dir}", flush=True)
 

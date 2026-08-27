@@ -278,7 +278,7 @@ def save_tokenizer_files(
 
 
 if __name__ == "__main__":
-    input_path = r"./data/owt_train.txt"
+    input_path = r"../data/owt_train.txt"
     t0 = time.perf_counter()
     vocab, merges = train_bpe_tokenizer(input_path, 32000, ["<|endoftext|>"])
     print(f"{time.perf_counter() - t0:.1f}s")

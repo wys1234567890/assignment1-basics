@@ -133,7 +133,9 @@ def data_loader(dataset: numpy.ndarray, batch_size: int, context_length: int, de
     # torch.from_numpy 会得到 int16，而 cross_entropy_loss 要求 targets 为 int32/int64。
     return x.long().to(device), y.long().to(device)
 
-def save_checkpoint(model: torch.nn.Module, optimizer: torch.optim.Optimizer, iteration: int, path: str):
+def save_checkpoint(
+    model: torch.nn.Module, optimizer: torch.optim.Optimizer, iteration: int, path: str, config: dict = None
+):
     """
     保存模型和优化器的检查点。
     参数：
@@ -141,19 +143,30 @@ def save_checkpoint(model: torch.nn.Module, optimizer: torch.optim.Optimizer, it
         optimizer: 要保存的优化器。
         iteration: 当前迭代次数。
         path: 保存检查点的文件路径。
+        config: 可选，模型结构配置（dict），存进 checkpoint 以便推理时自动重建模型。
     """
-    torch.save({
+    ckpt = {
         'iteration': iteration,
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
-        }, path)
+    }
+    if config is not None:
+        ckpt['config'] = config
+    torch.save(ckpt, path)
 
-def load_checkpoint(src: str, model: torch.nn.Module, optimizer: torch.optim.Optimizer):
+def load_checkpoint(src: str, model: torch.nn.Module, optimizer: torch.optim.Optimizer | None):
     """
     从检查点加载模型和优化器的状态。
+    参数：
+        src: 检查点路径或文件对象。
+        model: 加载 state_dict 的模型。
+        optimizer: 加载 state_dict 的优化器；推理时传 None 则跳过优化器加载。
+    返回：
+        int: 之前保存的迭代次数。
     """
-    checkpoint = torch.load(src, map_location='cuda:0' if torch.cuda.is_available() else 'cpu')
+    checkpoint = torch.load(src, map_location='cuda:0' if torch.cuda.is_available() else 'cpu', weights_only=False)
     model.load_state_dict(checkpoint['model_state_dict'])
-    optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    if optimizer is not None:
+        optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     iteration = checkpoint['iteration']
     return iteration
